@@ -33,7 +33,7 @@ public class DuckingState implements IHeroState {
         } else if ( in == input.data.PRESS_RIGHT) {
             hero.changeStateTo(new RunningState());
         } else if ( in == input.data.PRESS_UP) {
-            hero.changeStateTo(new StandingState());
+            hero.changeStateTo(new JumpingState());
         }
 
         if (in != input.data.PRESS_DOWN)

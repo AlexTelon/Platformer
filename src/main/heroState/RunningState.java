@@ -20,7 +20,7 @@ public class RunningState implements IHeroState {
             if (in == input.data.PRESS_DOWN) {
                 hero.changeStateTo(new DuckingState());
             } else if (in == input.data.PRESS_UP) {
-                //hero.changeStateTo(new JumpingState());
+                hero.changeStateTo(new JumpingState());
             } else if ( in == input.data.PRESS_LEFT) {
                 img = ImageIO.read(new File("left.png"));
                 hero.addxPos(-10);
@@ -29,8 +29,6 @@ public class RunningState implements IHeroState {
                 img = ImageIO.read(new File("right.png"));
                 hero.addxPos(10);
                 hero.setDirection(Hero.Direction.RIGHT);
-            } else {
-                System.out.println("Invalid key '" + in + "' are ignored");
             }
         } catch (IOException e) {
             System.out.println("ERROR IN READING PICTURE");

@@ -11,12 +11,12 @@ import java.io.IOException;
 /**
  * @author Alex Telon
  */
-public class StandingState implements IHeroState {
+public class JumpingState implements IHeroState {
     private BufferedImage img = null;
 
-    public StandingState() {
+    public JumpingState() {
         try {
-            img = ImageIO.read(new File("right.png"));
+            img = ImageIO.read(new File("up.png"));
         } catch (IOException e) {
             System.out.println("ERROR IN READING PICTURE");
         }
@@ -24,40 +24,32 @@ public class StandingState implements IHeroState {
 
     @Override
     public void handleInput(Hero hero, input.data in) {
-        if (in == input.data.PRESS_DOWN) {
-            hero.changeStateTo(new DuckingState());
-        } else if (in == input.data.PRESS_UP) {
-            hero.changeStateTo(new JumpingState());
+        if (in == input.data.PRESS_UP) {
+        } else if( in == input.data.PRESS_DOWN) {
+            hero.addyPos(30);
+            hero.changeStateTo(new StandingState());
         } else if ( in == input.data.PRESS_LEFT) {
+            hero.addyPos(30);
             hero.changeStateTo(new RunningState());
         } else if ( in == input.data.PRESS_RIGHT) {
+            hero.addyPos(30);
             hero.changeStateTo(new RunningState());
         }
     }
 
     @Override
     public void update(Hero hero) {
-
     }
 
     @Override
     public void enter(Hero hero, IHeroState state) {
-        try {
-            Hero.Direction momentum = hero.getDirection();
-            if (momentum == Hero.Direction.RIGHT) {
-                img = ImageIO.read(new File("right.png"));
-            } else if (momentum == Hero.Direction.LEFT) {
-                img = ImageIO.read(new File("left.png"));
-            }
-        } catch (IOException e) {
-            System.out.println("ERROR IN READING PICTURE");
-        }
+        hero.addyPos(-30);
+        handleInput(hero, hero.inputStackPop());
     }
 
     @Override
     public BufferedImage getImg() {
         return img;
     }
-
 
 }

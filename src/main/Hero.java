@@ -22,8 +22,14 @@ public class Hero {
     // Should do nothing at the start
     AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
+    public Hero() {
+        // TODO
+        // this is only to "fix" a bug
+        InputStack.push(input.data.PRESS_RIGHT);
+    }
+
     public void handleInput(input.data input) {
-        InputStack.push(input);
+        this.inputStackPush(input);
         state.handleInput(this, input);
     }
     public void update() {
@@ -31,7 +37,7 @@ public class Hero {
     }
 
     public void changeStateTo(IHeroState state) {
-        StateStack.push(this.state);
+        this.stateStackPush(this.state);
         this.state = state;
         state.enter(this, state);
     }
@@ -81,14 +87,17 @@ public class Hero {
     }
 
     public void inputStackPush(input.data input) {
+        System.out.println("input push " + input.toString());
         InputStack.push(input);
     }
 
     public input.data inputStackPeek() {
+        System.out.println("input peeeeeek " + InputStack.peek().toString());
         return (input.data) InputStack.peek();
     }
 
     public input.data inputStackPop() {
+        System.out.println("input pop " + InputStack.peek().toString());
         return (input.data) InputStack.pop();
     }
 
