@@ -1,0 +1,4 @@
+// Alex Telon
+
+This project is for training to work with main.state machine patterns.
+used http://gameprogrammingpatterns.com/main.state.html as an inspiration.
