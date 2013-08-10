@@ -71,8 +71,8 @@ public class GraphicalViewer extends JComponent {
     }
 
     private void paintBackground(Graphics2D g2) {
-        g2.setColor(SystemColor.green);
-        g2.fillRect(0, 280, 500, 120);
+       // g2.setColor(SystemColor.green);
+    //    g2.fillRect(0, 280, 500, 120);
     }
 
 

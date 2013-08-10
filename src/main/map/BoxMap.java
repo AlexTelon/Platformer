@@ -30,4 +30,5 @@ public class BoxMap {
     public Box[][] getBoxMap() {
         return boxMap;
     }
+
 }

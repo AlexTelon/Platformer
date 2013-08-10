@@ -8,8 +8,6 @@ import java.util.Timer;
 
 public class Main {
 
-    static double refreshrate = 50;
-    static int refRate = (int) refreshrate;
     static GameFrame gameFrame;
     public Main() {
 
@@ -20,11 +18,12 @@ public class Main {
             public void run() {
                 gameFrame.update();
             }
-        }, 0, refRate);
+        }, 0, Globals.getRefreshrate());
     }
 
     public static void main(String[] args) {
         new Main();
     }
+
 
 }

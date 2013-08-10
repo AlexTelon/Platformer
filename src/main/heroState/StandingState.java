@@ -37,7 +37,9 @@ public class StandingState implements IHeroState {
 
     @Override
     public void update(Hero hero) {
-
+        if (!hero.onGround()) {
+            hero.changeStateTo(new FallingState());
+        }
     }
 
     @Override

@@ -16,12 +16,23 @@ public class MapCreator {
     public static void createMap(Hero hero) {
         boolean temp;
         int i = 0;
+        createFloor(hero);
         do {
-            temp = hero.getMap().addBox(new Box(), rand.nextInt(Globals.getWidthInBoxes() + 1), rand.nextInt(Globals.getHeightInBoxes() + 1));
+            temp = hero.getMap().addBox(new Box(), rand.nextInt(Globals.getWidthInBoxes()), rand.nextInt(Globals.getHeightInBoxes()));
             if (temp) {
                 i++;
             }
-        } while (i < 6);
+        } while (i < 36);
     }
+
+    /**
+     * Creates a floor.
+     */
+    private static void createFloor(Hero hero) {
+        for (int x = 0; x < Globals.getWidthInBoxes(); x++) {
+            hero.getMap().addBox(new Box(), x, Globals.getHeightInBoxes()-1);
+        }
+    }
+
 
 }

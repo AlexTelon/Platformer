@@ -26,24 +26,24 @@ public class JumpingState implements IHeroState {
     public void handleInput(Hero hero, input.data in) {
         if (in == input.data.PRESS_UP) {
         } else if( in == input.data.PRESS_DOWN) {
-            hero.addyPos(30);
             hero.changeStateTo(new StandingState());
         } else if ( in == input.data.PRESS_LEFT) {
-            hero.addyPos(30);
             hero.changeStateTo(new RunningState());
         } else if ( in == input.data.PRESS_RIGHT) {
-            hero.addyPos(30);
             hero.changeStateTo(new RunningState());
         }
     }
 
     @Override
     public void update(Hero hero) {
+        if (!hero.onGround()) {
+            hero.changeStateTo(new FallingState());
+        }
     }
 
     @Override
     public void enter(Hero hero, IHeroState state) {
-        hero.addyPos(-30);
+        hero.addyPos(-240);
         handleInput(hero, hero.inputStackPop());
     }
 

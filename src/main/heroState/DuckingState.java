@@ -45,7 +45,9 @@ public class DuckingState implements IHeroState {
         if (hero.inputStackPeek() == input.data.PRESS_DOWN) {
             chargeTime++;
         }
-        System.out.println(chargeTime);
+        if (!hero.onGround()) {
+            hero.changeStateTo(new FallingState());
+        }
     }
 
     @Override

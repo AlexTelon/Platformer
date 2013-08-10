@@ -51,16 +51,16 @@ public class GameFrame extends JFrame implements KeyListener {
     public void keyTyped( KeyEvent e ) {
         switch (e.getKeyChar()) {
             case 'a' : hero.handleInput(input.data.PRESS_LEFT);
-                System.out.println("Left");
+            //    System.out.println("Left");
                 break;
             case 'd': hero.handleInput(input.data.PRESS_RIGHT);
-                System.out.println("Right");
+           //     System.out.println("Right");
                 break;
             case 'w' : hero.handleInput(input.data.PRESS_UP);
-                System.out.println("Up");
+            //    System.out.println("Up");
                 break;
             case 's': hero.handleInput(input.data.PRESS_DOWN);
-                System.out.println("Down");
+            //    System.out.println("Down");
                 break;
             default:
         }

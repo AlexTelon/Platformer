@@ -38,7 +38,10 @@ public class RunningState implements IHeroState {
 
     @Override
     public void update(Hero hero) {
-     }
+        if (!hero.onGround()) {
+            hero.changeStateTo(new FallingState());
+        }
+    }
 
     @Override
     public void enter(Hero hero, IHeroState state) {

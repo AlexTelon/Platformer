@@ -4,8 +4,6 @@ import main.map.Box;
 import main.map.BoxMap;
 import main.map.MapCreator;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.util.Stack;
 
 /**
@@ -17,18 +15,21 @@ public class Hero {
     private Stack InputStack = new Stack();
     private int xPos = 150; // start pos in pixels
     private int yPos = 150; // start pos in pixels
+    private int height = 30;
+    private int width = 30;
     private int mapProgression = 0; // which is the leftmost position on the screen
+    private boolean isAlive = true;
     private BoxMap map = new BoxMap();
     public static enum Direction {
         LEFT, RIGHT;
     }
     private Direction direction = Direction.RIGHT;
-    AffineTransform tx = AffineTransform.getTranslateInstance(0, 0);
-    // Should do nothing at the start
-    AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
     public Hero() {
         // TODO
         // this is only to "fix" a bug
+        System.out.println("DERP");
+        InputStack.push(input.data.PRESS_RIGHT);
         InputStack.push(input.data.PRESS_RIGHT);
         MapCreator.createMap(this);
     }
@@ -64,16 +65,39 @@ public class Hero {
     }
 
     public void addyPos(int y) {
-        this.yPos += y;
-    }
+        int yNew= yPos + y;
+        int yOldFeet = this.yPos + Box.getSide();
+        int yNewFeet = yNew + Box.getSide();
+        int xBoxPos = pixelPosToBoxPos(xPos);
+        int yBoxPosFeet = pixelPosToBoxPos(yNew+Box.getSide());
+        int yOldBoxPosFeet = pixelPosToBoxPos(yOldFeet);
 
-    public void rotateImg (int degrees) {
-        AffineTransform temp = AffineTransform.getRotateInstance(Math.toRadians(degrees), 15, 15);
-        op = new AffineTransformOp(temp, AffineTransformOp.TYPE_BILINEAR);
-    }
+        if (yBoxPosFeet >= Globals.getHeightInBoxes()) {
+            // hero has fallen too low!
+            for (int i = yOldBoxPosFeet-1; i < Globals.getHeightInBoxes()-1; i++) {
+                if (isSolid(this.getMap().getBoxMap()[i][xBoxPos])) {
+                    // else we would end up inside/below a box
+                    // so we put it on the box
+                    this.yPos = (i-1)*Box.getSide();
+                    return;
+                }
+            }
+        } else {
+            for (int i = yOldBoxPosFeet-1; i < Globals.getHeightInBoxes(); i++) {
+                if (isSolid(this.getMap().getBoxMap()[i][xBoxPos])) {
+                    if (yNewFeet < i*Box.getSide()) {
+                        // feet of hero will be over a box. -> OK
+                        this.yPos = yPos + y;
+                    } else {
+                        // else we would end up inside/below a box
+                        // so we put it on the box
+                        this.yPos = (i-1)*Box.getSide();
+                    }
+                    return;
+                }
+            }
+        }
 
-    public AffineTransformOp getOp() {
-        return op;
     }
 
     public IHeroState getState() {
@@ -101,7 +125,7 @@ public class Hero {
     }
 
     public input.data inputStackPeek() {
-        System.out.println("input peek " + InputStack.peek().toString());
+        //    System.out.println("input peek " + InputStack.peek().toString());
         return (input.data) InputStack.peek();
     }
 
@@ -121,19 +145,6 @@ public class Hero {
         this.direction = direction;
     }
 
-    /**
-     * Makes input right/left into direction right/left.
-     * DO NOT USE OTHER THAN PRESS_LEFT or PRESS_RIGHT
-     * @param input (right/left)
-     * @return a direction
-     */
-    public static Direction inputToDirection(input.data input) {
-        if (input == main.input.data.PRESS_LEFT) {
-            return Direction.LEFT;
-        }
-        return Direction.RIGHT;
-    }
-
     public BoxMap getMap() {
         return map;
     }
@@ -141,4 +152,49 @@ public class Hero {
     public int getMapProgression() {
         return mapProgression;
     }
+
+    public boolean onGround() {
+        int yHeroFeetPos = this.getyPos()+this.height;
+        int xHeroFeetPosLeft = this.getxPos();
+        int xHeroFeetPosRight = xHeroFeetPosLeft + this.width;
+
+        if (pixelPosToBoxPos(yHeroFeetPos) >= Globals.getHeightInBoxes()) {
+            return false;
+        }
+        // The hero can stand on boxes in 3 ways.
+        // 1 - perfectly on one box only
+        // 2 - left side is on a box
+        // 3 - right side is on a box
+        // The below if statement sees if any of the above is the case, otherwise we should fall
+        if (isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(yHeroFeetPos)][pixelPosToBoxPos(xHeroFeetPosLeft)]) ||
+                isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(yHeroFeetPos)][pixelPosToBoxPos(xHeroFeetPosRight)])) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * solid box checks if it is null or if the box is there but inactive in some way
+     * @param box
+     * @return
+     */
+    private boolean isSolid(Box box) {
+        if (box == null || !box.isActive()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @param pixelPos in pixels
+     * @return pos in "boxes"
+     */
+    private int pixelPosToBoxPos(int pixelPos) {
+        return pixelPos / Box.getSide();
+    }
+
+
+
+
 }
