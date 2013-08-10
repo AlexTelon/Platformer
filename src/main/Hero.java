@@ -1,5 +1,8 @@
 package main;
 import main.heroState.*;
+import main.map.Box;
+import main.map.BoxMap;
+import main.map.MapCreator;
 
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -12,36 +15,42 @@ public class Hero {
     private IHeroState state = new StandingState();
     private Stack StateStack = new Stack();
     private Stack InputStack = new Stack();
-    private int xPos = 150;
-    private int yPos = 250;
+    private int xPos = 150; // start pos in pixels
+    private int yPos = 150; // start pos in pixels
+    private int mapProgression = 0; // which is the leftmost position on the screen
+    private BoxMap map = new BoxMap();
     public static enum Direction {
-        LEFT, RIGHT
+        LEFT, RIGHT;
     }
     private Direction direction = Direction.RIGHT;
     AffineTransform tx = AffineTransform.getTranslateInstance(0, 0);
     // Should do nothing at the start
     AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
-
     public Hero() {
         // TODO
         // this is only to "fix" a bug
         InputStack.push(input.data.PRESS_RIGHT);
+        MapCreator.createMap(this);
     }
 
     public void handleInput(input.data input) {
         this.inputStackPush(input);
         state.handleInput(this, input);
     }
+
     public void update() {
         state.update(this);
     }
-
     public void changeStateTo(IHeroState state) {
         this.stateStackPush(this.state);
         this.state = state;
         state.enter(this, state);
     }
 
+    /**
+     *
+     * @return Heroes x position in pixels relative to the top. (top is 0)
+     */
     public int getxPos() {
         return xPos;
     }
@@ -92,7 +101,7 @@ public class Hero {
     }
 
     public input.data inputStackPeek() {
-        System.out.println("input peeeeeek " + InputStack.peek().toString());
+        System.out.println("input peek " + InputStack.peek().toString());
         return (input.data) InputStack.peek();
     }
 
@@ -125,4 +134,11 @@ public class Hero {
         return Direction.RIGHT;
     }
 
+    public BoxMap getMap() {
+        return map;
+    }
+
+    public int getMapProgression() {
+        return mapProgression;
+    }
 }
