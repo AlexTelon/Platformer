@@ -26,6 +26,16 @@ public class FallingState implements IHeroState {
         }
     }
 
+    public FallingState(double velocity) {
+        try {
+            img = ImageIO.read(new File("falling.png"));
+        } catch (IOException e) {
+            System.out.println("ERROR IN READING PICTURE");
+        }
+        fallingVelocity = velocity;
+    }
+
+
     @Override
     public void handleInput(Hero hero, input.data in) {
         // crude version..
