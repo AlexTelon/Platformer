@@ -13,6 +13,8 @@ import java.io.IOException;
  */
 public class RunningState implements IHeroState {
     private BufferedImage img = null;
+    private int runnigSpeed = 10; // the quantitive speed
+    private int runnigVelocity = 10; // speed WITH direction
 
     @Override
     public void handleInput(Hero hero, input.data in) {
@@ -20,14 +22,16 @@ public class RunningState implements IHeroState {
             if (in == input.data.PRESS_DOWN) {
                 hero.changeStateTo(new DuckingState());
             } else if (in == input.data.PRESS_UP) {
-                hero.changeStateTo(new JumpingState());
+                hero.changeStateTo(new JumpingState(runnigVelocity));
             } else if ( in == input.data.PRESS_LEFT) {
                 img = ImageIO.read(new File("left.png"));
-                hero.addxPos(-10);
+                runnigVelocity = -runnigSpeed;
+                hero.addxPos(runnigVelocity);
                 hero.setDirection(Hero.Direction.LEFT);
             } else if ( in == input.data.PRESS_RIGHT) {
                 img = ImageIO.read(new File("right.png"));
-                hero.addxPos(10);
+                runnigVelocity = runnigSpeed;
+                hero.addxPos(runnigVelocity);
                 hero.setDirection(Hero.Direction.RIGHT);
             }
         } catch (IOException e) {

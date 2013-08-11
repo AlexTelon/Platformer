@@ -22,7 +22,7 @@ public class MapCreator {
             if (temp) {
                 i++;
             }
-        } while (i < 36);
+        } while (i < 26);
     }
 
     /**

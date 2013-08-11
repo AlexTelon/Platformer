@@ -54,6 +54,8 @@ public class GraphicalViewer extends JComponent {
         // Debug info
         g2.setColor(Color.black);
         g2.drawString(hero.getState().toString(), 100, 25);
+
+
     }
 
     private void paintBoxes(Graphics2D g2) {

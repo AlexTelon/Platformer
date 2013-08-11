@@ -71,7 +71,7 @@ public class Hero {
         int xBoxPos = pixelPosToBoxPos(xPos);
         int yBoxPosFeet = pixelPosToBoxPos(yNew+Box.getSide());
         int yOldBoxPosFeet = pixelPosToBoxPos(yOldFeet);
-
+/*
         if (yBoxPosFeet >= Globals.getHeightInBoxes()) {
             // hero has fallen too low!
             for (int i = yOldBoxPosFeet-1; i < Globals.getHeightInBoxes()-1; i++) {
@@ -83,6 +83,7 @@ public class Hero {
                 }
             }
         } else {
+*/
             for (int i = yOldBoxPosFeet-1; i < Globals.getHeightInBoxes(); i++) {
                 if (isSolid(this.getMap().getBoxMap()[i][xBoxPos])) {
                     if (yNewFeet < i*Box.getSide()) {
@@ -98,7 +99,7 @@ public class Hero {
             }
         }
 
-    }
+   // }
 
     public IHeroState getState() {
         return state;

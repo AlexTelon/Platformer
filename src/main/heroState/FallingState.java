@@ -2,7 +2,6 @@ package main.heroState;
 
 import main.Globals;
 import main.Hero;
-import main.Main;
 import main.input;
 
 import javax.imageio.ImageIO;
@@ -15,7 +14,8 @@ import java.io.IOException;
  */
 public class FallingState implements IHeroState {
     private BufferedImage img = null;
-    private double fallingVelocity = 0;
+    private double yFallingVelocity = 0;
+    private int xFallingVelocity = 0; // speed WITH direction
     // private int fallingTime = 0;
 
     public FallingState() {
@@ -26,13 +26,14 @@ public class FallingState implements IHeroState {
         }
     }
 
-    public FallingState(double velocity) {
+    public FallingState(double yVelocity, int xVelocity) {
         try {
             img = ImageIO.read(new File("falling.png"));
         } catch (IOException e) {
             System.out.println("ERROR IN READING PICTURE");
         }
-        fallingVelocity = velocity;
+        yFallingVelocity = yVelocity;
+        xFallingVelocity = xVelocity;
     }
 
 
@@ -47,12 +48,13 @@ public class FallingState implements IHeroState {
     @Override
     public void update(Hero hero) {
         if (hero.onGround()) {
-            fallingVelocity = 0;
+            yFallingVelocity = 0;
             System.out.println("Falling is reset!!");
             hero.changeStateTo(new StandingState());
         } else {
             updateFallingVelocity();
             hero.addyPos(velocityToInt(hero));
+            hero.addxPos(xFallingVelocity);
         }
     }
 
@@ -68,12 +70,12 @@ public class FallingState implements IHeroState {
     private void updateFallingVelocity() {
         //System.out.println("what we add: " + 9.81 + "*" + Globals.getTimeIntervalMS() + "*" + Globals.pixelsPerMeter());
       //  System.out.println((9.81*Globals.getTimeIntervalMS()/Globals.pixelsPerMeter()));
-        fallingVelocity += (9.81*Globals.getTimeIntervalMS()/Globals.pixelsPerMeter());
+        yFallingVelocity += (9.81*Globals.getTimeIntervalMS()/Globals.pixelsPerMeter());
     }
 
     private int velocityToInt(Hero hero) {
-        int temp = (int) fallingVelocity;
-         System.out.println("Falling: " + fallingVelocity + " Y pos: " + hero.getyPos());
+        int temp = (int) yFallingVelocity;
+         System.out.println("Falling: " + yFallingVelocity + " Y pos: " + hero.getyPos());
         return temp;
     }
 
