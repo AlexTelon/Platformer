@@ -1,7 +1,7 @@
 package main.heroState;
 
 import main.Hero;
-import main.input;
+import main.Input;
 
 import java.awt.image.BufferedImage;
 
@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
  * TODO create a statePool somewhere so we do not create new states all the time but reuse them.
  */
 public interface IHeroState {
-    public void handleInput(Hero hero, input.data in);
+    public void handleInput(Hero hero, Input.data in);
     public void update(Hero hero);
     public void enter(Hero hero, IHeroState state);
     public BufferedImage getImg();

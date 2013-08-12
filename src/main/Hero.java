@@ -20,7 +20,7 @@ public class Hero {
     private int runnigSpeed = 10; // the quantitive speed
     private int mapProgression = 0; // which is the leftmost position on the screen
     private boolean isAlive = true;
-    private boolean newInputt = false;
+    private boolean newInput = false;
     private BoxMap map = new BoxMap();
     public static enum Direction {
         LEFT, RIGHT;
@@ -30,13 +30,14 @@ public class Hero {
     public Hero() {
         // TODO
         // this is only to "fix" a bug
-        InputStack.push(input.data.PRESS_RIGHT);
+        InputStack.push(Input.data.PRESS_RIGHT);
         MapCreator.createMap(this);
     }
 
-    public void handleInput(input.data input) {
+    public void handleInput(Input.data input) {
         this.inputStackPush(input);
-           state.handleInput(this, input);
+
+        state.handleInput(this, input);
     }
 
     public void update() {
@@ -113,24 +114,24 @@ public class Hero {
     }
 
     //TODO change the way we handle input?
-    public void inputStackPush(input.data input) {
-        System.out.println("input push " + input.toString());
-      //  InputStack.clear();
+    public void inputStackPush(Input.data input) {
+        System.out.println("Input push " + input.toString());
+        //  InputStack.clear();
         this.setNewInput(true);
         InputStack.push(input);
     }
 
-    public input.data inputStackPeek() {
+    public Input.data inputStackPeek() {
 
-        if (newInputt) {
+        if (newInput) {
             this.setNewInput(false);
             System.out.println("input peek " + InputStack.peek().toString());
-            return (input.data) InputStack.peek();
+            return (Input.data) InputStack.peek();
         }
         this.setNewInput(false);
-        System.out.println("input peek " + input.data.NO_INPUT.toString());
-        InputStack.push(input.data.NO_INPUT);
-        return input.data.NO_INPUT;
+        System.out.println("input peek " + Input.data.NO_INPUT.toString());
+        InputStack.push(Input.data.NO_INPUT);
+        return Input.data.NO_INPUT;
     }
 
     /**
@@ -198,10 +199,10 @@ public class Hero {
     }
 
     public boolean getNewInput() {
-        return newInputt;
+        return newInput;
     }
 
     public void setNewInput(boolean newInput) {
-        this.newInputt = newInput;
+        this.newInput = newInput;
     }
 }

@@ -1,7 +1,7 @@
 package main.graphics;
 
 import main.Hero;
-import main.input;
+import main.Input;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,29 +38,29 @@ public class GameFrame extends JFrame implements KeyListener {
     }
     public void keyReleased( KeyEvent e ) {
         switch (e.getKeyChar()) {
-            case 'a' : hero.handleInput(input.data.RELEASE_LEFT);
+            case 'a' : hero.handleInput(Input.data.RELEASE_LEFT);
                 break;
-            case 'd': hero.handleInput(input.data.RELEASE_RIGHT);
+            case 'd': hero.handleInput(Input.data.RELEASE_RIGHT);
                 break;
-            case 'w' : hero.handleInput(input.data.RELEASE_UP);
+            case 'w' : hero.handleInput(Input.data.RELEASE_UP);
                 break;
-            case 's': hero.handleInput(input.data.RELEASE_DOWN);
+            case 's': hero.handleInput(Input.data.RELEASE_DOWN);
                 break;
             default:
         }
     }
     public void keyTyped( KeyEvent e ) {
         switch (e.getKeyChar()) {
-            case 'a' : hero.handleInput(input.data.PRESS_LEFT);
+            case 'a' : hero.handleInput(Input.data.PRESS_LEFT);
             //    System.out.println("Left");
                 break;
-            case 'd': hero.handleInput(input.data.PRESS_RIGHT);
+            case 'd': hero.handleInput(Input.data.PRESS_RIGHT);
            //     System.out.println("Right");
                 break;
-            case 'w' : hero.handleInput(input.data.PRESS_UP);
+            case 'w' : hero.handleInput(Input.data.PRESS_UP);
             //    System.out.println("Up");
                 break;
-            case 's': hero.handleInput(input.data.PRESS_DOWN);
+            case 's': hero.handleInput(Input.data.PRESS_DOWN);
             //    System.out.println("Down");
                 break;
             default:

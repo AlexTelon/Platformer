@@ -1,7 +1,7 @@
 package main.heroState;
 
 import main.Hero;
-import main.input;
+import main.Input;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -27,14 +27,14 @@ public class StandingState implements IHeroState {
     }
 
     @Override
-    public void handleInput(Hero hero, input.data in) {
-        if (in == input.data.PRESS_DOWN) {
+    public void handleInput(Hero hero, Input.data in) {
+        if (in == Input.data.PRESS_DOWN) {
             hero.changeStateTo(new DuckingState());
-        } else if (in == input.data.PRESS_UP) {
+        } else if (in == Input.data.PRESS_UP) {
             hero.changeStateTo(new JumpingState());
-        } else if ( in == input.data.PRESS_LEFT) {
+        } else if ( in == Input.data.PRESS_LEFT) {
             hero.changeStateTo(new RunningState());
-        } else if ( in == input.data.PRESS_RIGHT) {
+        } else if ( in == Input.data.PRESS_RIGHT) {
             hero.changeStateTo(new RunningState());
         }
     }

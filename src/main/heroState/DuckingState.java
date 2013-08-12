@@ -1,7 +1,7 @@
 package main.heroState;
 
 import main.Hero;
-import main.input;
+import main.Input;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -16,10 +16,10 @@ public class DuckingState implements IHeroState {
     private BufferedImage img = null;
 
     @Override
-    public void handleInput(Hero hero, input.data in) {
-        if (in == input.data.RELEASE_DOWN) {
+    public void handleInput(Hero hero, Input.data in) {
+        if (in == Input.data.RELEASE_DOWN) {
             hero.changeStateTo(new StandingState(hero.getDirection()));
-        } else if( in == input.data.PRESS_DOWN) {
+        } else if( in == Input.data.PRESS_DOWN) {
             try {
                 if (chargeTime > 5) {
                     img = ImageIO.read(new File("ducking.png"));
@@ -28,21 +28,21 @@ public class DuckingState implements IHeroState {
             } catch (IOException e) {
                 System.out.println("ERROR IN READING PICTURE");
             }
-        } else if ( in == input.data.PRESS_LEFT) {
+        } else if ( in == Input.data.PRESS_LEFT) {
             hero.changeStateTo(new RunningState());
-        } else if ( in == input.data.PRESS_RIGHT) {
+        } else if ( in == Input.data.PRESS_RIGHT) {
             hero.changeStateTo(new RunningState());
-        } else if ( in == input.data.PRESS_UP) {
+        } else if ( in == Input.data.PRESS_UP) {
             hero.changeStateTo(new JumpingState());
         }
 
-        if (in != input.data.PRESS_DOWN)
+        if (in != Input.data.PRESS_DOWN)
             chargeTime = 0;
     }
 
     @Override
     public void update(Hero hero) {
-        if (hero.inputStackPeek() == input.data.PRESS_DOWN) {
+        if (hero.inputStackPeek() == Input.data.PRESS_DOWN) {
             chargeTime++;
         }
         if (!hero.onGround()) {

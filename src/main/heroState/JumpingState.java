@@ -2,7 +2,7 @@ package main.heroState;
 
 import main.Globals;
 import main.Hero;
-import main.input;
+import main.Input;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -40,19 +40,19 @@ public class JumpingState implements IHeroState {
     }
 
     @Override
-    public void handleInput(Hero hero, input.data in) {
-        if (in == input.data.PRESS_UP) {
+    public void handleInput(Hero hero, Input.data in) {
+        if (in == Input.data.PRESS_UP) {
             if ( nrOfJumpsInAir < maxNrOfJumpsInAir) {
                 nrOfJumpsInAir++;
                 hero.changeStateTo(new JumpingState(xJumpingVelocity, nrOfJumpsInAir));
             }
-        } else if( in == input.data.PRESS_DOWN) {
+        } else if( in == Input.data.PRESS_DOWN) {
             // pressing down should end the jump
             hero.changeStateTo(new FallingState(yJumpingVelocity, xJumpingVelocity));
-        } else if ( in == input.data.PRESS_LEFT) {
+        } else if ( in == Input.data.PRESS_LEFT) {
             xJumpingVelocity = -hero.getRunnigSpeed();
             hero.setDirection(Hero.Direction.LEFT);
-        } else if ( in == input.data.PRESS_RIGHT) {
+        } else if ( in == Input.data.PRESS_RIGHT) {
             xJumpingVelocity = hero.getRunnigSpeed();
             hero.setDirection(Hero.Direction.RIGHT);
         }

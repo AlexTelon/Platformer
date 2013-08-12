@@ -2,7 +2,7 @@ package main.heroState;
 
 import main.Globals;
 import main.Hero;
-import main.input;
+import main.Input;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -38,15 +38,15 @@ public class FallingState implements IHeroState {
 
 
     @Override
-    public void handleInput(Hero hero, input.data in) {
+    public void handleInput(Hero hero, Input.data in) {
       try {
-        if (in == input.data.PRESS_UP) {
+        if (in == Input.data.PRESS_UP) {
           //  hero.changeStateTo(new StandingState());
-        }  else if ( in == input.data.PRESS_LEFT) {
+        }  else if ( in == Input.data.PRESS_LEFT) {
             img = ImageIO.read(new File("left.png"));
             xFallingVelocity = -hero.getRunnigSpeed();
             hero.setDirection(Hero.Direction.LEFT);
-        } else if ( in == input.data.PRESS_RIGHT) {
+        } else if ( in == Input.data.PRESS_RIGHT) {
             img = ImageIO.read(new File("right.png"));
             xFallingVelocity = hero.getRunnigSpeed();
             hero.setDirection(Hero.Direction.RIGHT);
