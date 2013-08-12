@@ -4,7 +4,6 @@ import main.Globals;
 import main.Hero;
 
 import java.util.Random;
-import java.util.Random;
 
 /**
  * @author Alex Telon
@@ -22,7 +21,7 @@ public class MapCreator {
             if (temp) {
                 i++;
             }
-        } while (i < 26);
+        } while (i < 10);
     }
 
     /**

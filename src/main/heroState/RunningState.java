@@ -13,8 +13,7 @@ import java.io.IOException;
  */
 public class RunningState implements IHeroState {
     private BufferedImage img = null;
-    private int runnigSpeed = 10; // the quantitive speed
-    private int runnigVelocity = 10; // speed WITH direction
+    private int runnigVelocity = 0; // speed WITH direction
 
     @Override
     public void handleInput(Hero hero, input.data in) {
@@ -22,17 +21,22 @@ public class RunningState implements IHeroState {
             if (in == input.data.PRESS_DOWN) {
                 hero.changeStateTo(new DuckingState());
             } else if (in == input.data.PRESS_UP) {
-                hero.changeStateTo(new JumpingState(runnigVelocity));
+                hero.changeStateTo(new JumpingState(runnigVelocity, 0));
             } else if ( in == input.data.PRESS_LEFT) {
                 img = ImageIO.read(new File("left.png"));
-                runnigVelocity = -runnigSpeed;
-                hero.addxPos(runnigVelocity);
+                runnigVelocity = -hero.getRunnigSpeed();
                 hero.setDirection(Hero.Direction.LEFT);
             } else if ( in == input.data.PRESS_RIGHT) {
                 img = ImageIO.read(new File("right.png"));
-                runnigVelocity = runnigSpeed;
-                hero.addxPos(runnigVelocity);
+                runnigVelocity = hero.getRunnigSpeed();
                 hero.setDirection(Hero.Direction.RIGHT);
+            } else if (in == input.data.RELEASE_LEFT ||
+                    in == input.data.RELEASE_RIGHT) {
+                runnigVelocity = 0;
+                hero.changeStateTo(new StandingState(hero.getDirection()));
+            } else if ( in == input.data.NO_INPUT) {
+                runnigVelocity = 0;
+                hero.changeStateTo(new StandingState(hero.getDirection()));
             }
         } catch (IOException e) {
             System.out.println("ERROR IN READING PICTURE");
@@ -44,16 +48,20 @@ public class RunningState implements IHeroState {
     public void update(Hero hero) {
         if (!hero.onGround()) {
             hero.changeStateTo(new FallingState());
+        } else {
+            hero.addxPos(runnigVelocity);
         }
     }
 
     @Override
     public void enter(Hero hero, IHeroState state) {
-        this.handleInput(hero, hero.inputStackPop());
+        this.handleInput(hero, hero.inputStackPeek());
     }
 
     @Override
     public BufferedImage getImg() {
         return img;
     }
+
+
 }

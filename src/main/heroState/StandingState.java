@@ -14,9 +14,13 @@ import java.io.IOException;
 public class StandingState implements IHeroState {
     private BufferedImage img = null;
 
-    public StandingState() {
+    public StandingState(Hero.Direction direction) {
         try {
-            img = ImageIO.read(new File("right.png"));
+            if (direction == Hero.Direction.RIGHT) {
+                img = ImageIO.read(new File("right.png"));
+            } else if (direction == Hero.Direction.LEFT) {
+                img = ImageIO.read(new File("right.png"));
+            }
         } catch (IOException e) {
             System.out.println("ERROR IN READING PICTURE");
         }

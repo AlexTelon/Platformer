@@ -10,15 +10,17 @@ import java.util.Stack;
  * @author Alex Telon
  */
 public class Hero {
-    private IHeroState state = new StandingState();
+    private IHeroState state = new StandingState(this.getDirection());
     private Stack StateStack = new Stack();
     private Stack InputStack = new Stack();
     private int xPos = 150; // start pos in pixels
     private int yPos = 150; // start pos in pixels
     private int height = 30;
     private int width = 30;
+    private int runnigSpeed = 10; // the quantitive speed
     private int mapProgression = 0; // which is the leftmost position on the screen
     private boolean isAlive = true;
+    private boolean newInputt = false;
     private BoxMap map = new BoxMap();
     public static enum Direction {
         LEFT, RIGHT;
@@ -28,15 +30,13 @@ public class Hero {
     public Hero() {
         // TODO
         // this is only to "fix" a bug
-        System.out.println("DERP");
-        InputStack.push(input.data.PRESS_RIGHT);
         InputStack.push(input.data.PRESS_RIGHT);
         MapCreator.createMap(this);
     }
 
     public void handleInput(input.data input) {
         this.inputStackPush(input);
-        state.handleInput(this, input);
+           state.handleInput(this, input);
     }
 
     public void update() {
@@ -69,37 +69,29 @@ public class Hero {
         int yOldFeet = this.yPos + Box.getSide();
         int yNewFeet = yNew + Box.getSide();
         int xBoxPos = pixelPosToBoxPos(xPos);
-        int yBoxPosFeet = pixelPosToBoxPos(yNew+Box.getSide());
         int yOldBoxPosFeet = pixelPosToBoxPos(yOldFeet);
-/*
-        if (yBoxPosFeet >= Globals.getHeightInBoxes()) {
-            // hero has fallen too low!
-            for (int i = yOldBoxPosFeet-1; i < Globals.getHeightInBoxes()-1; i++) {
-                if (isSolid(this.getMap().getBoxMap()[i][xBoxPos])) {
+
+        // This makes the hero be able to go above the screen
+        if (yNew <= 0) {
+            this.yPos = yPos + y;
+            return;
+        }
+
+        for (int i = yOldBoxPosFeet; i < Globals.getHeightInBoxes(); i++) {
+            if (isSolid(this.getMap().getBoxMap()[i][xBoxPos])) {
+                if (yNewFeet < i*Box.getSide()) {
+                    // feet of hero will be over a box. -> OK
+                    this.yPos = yPos + y;
+                } else {
                     // else we would end up inside/below a box
                     // so we put it on the box
                     this.yPos = (i-1)*Box.getSide();
-                    return;
                 }
-            }
-        } else {
-*/
-            for (int i = yOldBoxPosFeet-1; i < Globals.getHeightInBoxes(); i++) {
-                if (isSolid(this.getMap().getBoxMap()[i][xBoxPos])) {
-                    if (yNewFeet < i*Box.getSide()) {
-                        // feet of hero will be over a box. -> OK
-                        this.yPos = yPos + y;
-                    } else {
-                        // else we would end up inside/below a box
-                        // so we put it on the box
-                        this.yPos = (i-1)*Box.getSide();
-                    }
-                    return;
-                }
+                return;
             }
         }
+    }
 
-   // }
 
     public IHeroState getState() {
         return state;
@@ -120,19 +112,25 @@ public class Hero {
         return (IHeroState) StateStack.pop();
     }
 
+    //TODO change the way we handle input?
     public void inputStackPush(input.data input) {
         System.out.println("input push " + input.toString());
+      //  InputStack.clear();
+        this.setNewInput(true);
         InputStack.push(input);
     }
 
     public input.data inputStackPeek() {
-        //    System.out.println("input peek " + InputStack.peek().toString());
-        return (input.data) InputStack.peek();
-    }
 
-    public input.data inputStackPop() {
-        System.out.println("input pop " + InputStack.peek().toString());
-        return (input.data) InputStack.pop();
+        if (newInputt) {
+            this.setNewInput(false);
+            System.out.println("input peek " + InputStack.peek().toString());
+            return (input.data) InputStack.peek();
+        }
+        this.setNewInput(false);
+        System.out.println("input peek " + input.data.NO_INPUT.toString());
+        InputStack.push(input.data.NO_INPUT);
+        return input.data.NO_INPUT;
     }
 
     /**
@@ -159,7 +157,7 @@ public class Hero {
         int xHeroFeetPosLeft = this.getxPos();
         int xHeroFeetPosRight = xHeroFeetPosLeft + this.width;
 
-        if (pixelPosToBoxPos(yHeroFeetPos) >= Globals.getHeightInBoxes()) {
+        if (pixelPosToBoxPos(yHeroFeetPos) <= 0) {
             return false;
         }
         // The hero can stand on boxes in 3 ways.
@@ -195,7 +193,15 @@ public class Hero {
         return pixelPos / Box.getSide();
     }
 
+    public int getRunnigSpeed() {
+        return runnigSpeed;
+    }
 
+    public boolean getNewInput() {
+        return newInputt;
+    }
 
-
+    public void setNewInput(boolean newInput) {
+        this.newInputt = newInput;
+    }
 }

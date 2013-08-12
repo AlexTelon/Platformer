@@ -18,7 +18,7 @@ public class DuckingState implements IHeroState {
     @Override
     public void handleInput(Hero hero, input.data in) {
         if (in == input.data.RELEASE_DOWN) {
-            hero.changeStateTo(new StandingState());
+            hero.changeStateTo(new StandingState(hero.getDirection()));
         } else if( in == input.data.PRESS_DOWN) {
             try {
                 if (chargeTime > 5) {
@@ -52,7 +52,7 @@ public class DuckingState implements IHeroState {
 
     @Override
     public void enter(Hero hero, IHeroState state) {
-        handleInput(hero, hero.inputStackPop());
+        handleInput(hero, hero.inputStackPeek());
     }
 
     @Override

@@ -34,7 +34,8 @@ public class GameFrame extends JFrame implements KeyListener {
     }
 
 
-    public void keyPressed( KeyEvent e ) { }
+    public void keyPressed( KeyEvent e ) {
+    }
     public void keyReleased( KeyEvent e ) {
         switch (e.getKeyChar()) {
             case 'a' : hero.handleInput(input.data.RELEASE_LEFT);

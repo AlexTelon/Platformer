@@ -39,10 +39,21 @@ public class FallingState implements IHeroState {
 
     @Override
     public void handleInput(Hero hero, input.data in) {
-        // crude version..
+      try {
         if (in == input.data.PRESS_UP) {
-            hero.changeStateTo(new StandingState());
+          //  hero.changeStateTo(new StandingState());
+        }  else if ( in == input.data.PRESS_LEFT) {
+            img = ImageIO.read(new File("left.png"));
+            xFallingVelocity = -hero.getRunnigSpeed();
+            hero.setDirection(Hero.Direction.LEFT);
+        } else if ( in == input.data.PRESS_RIGHT) {
+            img = ImageIO.read(new File("right.png"));
+            xFallingVelocity = hero.getRunnigSpeed();
+            hero.setDirection(Hero.Direction.RIGHT);
         }
+      } catch (IOException e) {
+          System.out.println("ERROR IN READING PICTURE");
+      }
     }
 
     @Override
@@ -50,7 +61,7 @@ public class FallingState implements IHeroState {
         if (hero.onGround()) {
             yFallingVelocity = 0;
             System.out.println("Falling is reset!!");
-            hero.changeStateTo(new StandingState());
+            hero.changeStateTo(new StandingState(hero.getDirection()));
         } else {
             updateFallingVelocity();
             hero.addyPos(velocityToInt(hero));
@@ -68,14 +79,12 @@ public class FallingState implements IHeroState {
     }
 
     private void updateFallingVelocity() {
-        //System.out.println("what we add: " + 9.81 + "*" + Globals.getTimeIntervalMS() + "*" + Globals.pixelsPerMeter());
-      //  System.out.println((9.81*Globals.getTimeIntervalMS()/Globals.pixelsPerMeter()));
         yFallingVelocity += (9.81*Globals.getTimeIntervalMS()/Globals.pixelsPerMeter());
     }
 
     private int velocityToInt(Hero hero) {
         int temp = (int) yFallingVelocity;
-         System.out.println("Falling: " + yFallingVelocity + " Y pos: " + hero.getyPos());
+     //    System.out.println("Falling: " + yFallingVelocity + " Y pos: " + hero.getyPos());
         return temp;
     }
 

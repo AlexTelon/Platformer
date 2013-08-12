@@ -14,8 +14,11 @@ import java.io.IOException;
  */
 public class JumpingState implements IHeroState {
     private BufferedImage img = null;
-    private double yJumpingVelocity = -50;
+    private double yJumpingVelocity = -40;
     private int xJumpingVelocity = 0;
+    private int nrOfJumpsInAir = 0;
+    private int maxNrOfJumpsInAir = 2;
+
 
 
     public JumpingState() {
@@ -26,25 +29,32 @@ public class JumpingState implements IHeroState {
         }
     }
 
-    public JumpingState(int runnigVelocity) {
+    public JumpingState(int runnigVelocity, int nrOfJumpsInAir) {
         try {
             img = ImageIO.read(new File("up.png"));
         } catch (IOException e) {
             System.out.println("ERROR IN READING PICTURE");
         }
         xJumpingVelocity = runnigVelocity;
+        this.nrOfJumpsInAir = nrOfJumpsInAir;
     }
 
     @Override
     public void handleInput(Hero hero, input.data in) {
         if (in == input.data.PRESS_UP) {
+            if ( nrOfJumpsInAir < maxNrOfJumpsInAir) {
+                nrOfJumpsInAir++;
+                hero.changeStateTo(new JumpingState(xJumpingVelocity, nrOfJumpsInAir));
+            }
         } else if( in == input.data.PRESS_DOWN) {
             // pressing down should end the jump
             hero.changeStateTo(new FallingState(yJumpingVelocity, xJumpingVelocity));
         } else if ( in == input.data.PRESS_LEFT) {
-            
+            xJumpingVelocity = -hero.getRunnigSpeed();
+            hero.setDirection(Hero.Direction.LEFT);
         } else if ( in == input.data.PRESS_RIGHT) {
-            
+            xJumpingVelocity = hero.getRunnigSpeed();
+            hero.setDirection(Hero.Direction.RIGHT);
         }
     }
 
@@ -52,7 +62,7 @@ public class JumpingState implements IHeroState {
     public void update(Hero hero) {
         if (hero.onGround()) {
             yJumpingVelocity = 0;
-            hero.changeStateTo(new StandingState());
+            hero.changeStateTo(new StandingState(hero.getDirection()));
         } else if (yJumpingVelocity > 0) {
             // we are now going downwards
             hero.changeStateTo(new FallingState(yJumpingVelocity, xJumpingVelocity));
@@ -69,8 +79,8 @@ public class JumpingState implements IHeroState {
         // fix so jumping is like a reverse falling so it looks neat.
         // make sure we are in jumpingState while moving upwards and
         // in falling stat when we move down.
-        hero.addyPos(-5);
-        handleInput(hero, hero.inputStackPop());
+        hero.addyPos(-1);
+        handleInput(hero, hero.inputStackPeek());
     }
 
     @Override
@@ -88,15 +98,13 @@ public class JumpingState implements IHeroState {
      * 
      */
     private void updateJumpingVelocity() {
-        //System.out.println("what we add: " + 9.81 + "*" + Globals.getTimeIntervalMS() + "*" + Globals.pixelsPerMeter());
-      //  System.out.println((9.81*Globals.getTimeIntervalMS()/Globals.pixelsPerMeter()));
         Globals Globals;
         yJumpingVelocity += (9.81* main.Globals.getTimeIntervalMS()/ main.Globals.pixelsPerMeter());
     }
     
         private int velocityToInt(Hero hero) {
         int temp = (int) yJumpingVelocity;
-         System.out.println("Jumping: " + yJumpingVelocity + " Y pos: " + hero.getyPos());
+    //     System.out.println("Jumping: " + yJumpingVelocity + " Y pos: " + hero.getyPos());
         return temp;
     }
 
