@@ -22,8 +22,12 @@ public class Hero {
     private boolean isAlive = true;
     private boolean newInput = false;
     private BoxMap map = new BoxMap();
+    private boolean isRunning = false;
+    private Input.data runningReleasedOn; // determines how isRunning is set to false
+
     public static enum Direction {
         LEFT, RIGHT;
+
     }
     private Direction direction = Direction.RIGHT;
 
@@ -36,7 +40,9 @@ public class Hero {
 
     public void handleInput(Input.data input) {
         this.inputStackPush(input);
-
+        if (input == runningReleasedOn) {
+            isRunning = false;
+        }
         state.handleInput(this, input);
     }
 
@@ -204,5 +210,33 @@ public class Hero {
 
     public void setNewInput(boolean newInput) {
         this.newInput = newInput;
+    }
+
+    /**
+     * Tells the hero it is running, also decleares which key
+     * has to be released before running can be set to false.
+     * This way only a release left can make a hero running to
+     * the left stop running. For the player this means that
+     * while holding down one of LEFT/RIGHT the other will not
+     * do any difference.
+     *
+     * If the hero already is running this does nothing. This so that
+     * if a player presses RIGHT while he is already holding LEFT
+     * the input RIGHT will be ignored.
+     * @param input
+     */
+    public void setRunning(Input.data input) {
+        if (!isRunning) {
+            isRunning = true;
+            if (input == Input.data.PRESS_LEFT) {
+                runningReleasedOn = Input.data.RELEASE_LEFT;
+            } else if (input == Input.data.PRESS_RIGHT) {
+                runningReleasedOn = Input.data.RELEASE_RIGHT;
+            }
+        }
+    }
+
+    public boolean isRunning() {
+        return isRunning;
     }
 }

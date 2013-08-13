@@ -33,8 +33,12 @@ public class StandingState implements IHeroState {
         } else if (in == Input.data.PRESS_UP) {
             hero.changeStateTo(new JumpingState());
         } else if ( in == Input.data.PRESS_LEFT) {
+            hero.setDirection(Hero.Direction.LEFT);
+            hero.setRunning(in);
             hero.changeStateTo(new RunningState());
         } else if ( in == Input.data.PRESS_RIGHT) {
+            hero.setDirection(Hero.Direction.RIGHT);
+            hero.setRunning(in);
             hero.changeStateTo(new RunningState());
         }
     }
@@ -43,7 +47,10 @@ public class StandingState implements IHeroState {
     public void update(Hero hero) {
         if (!hero.onGround()) {
             hero.changeStateTo(new FallingState());
+        } else if (hero.isRunning()) {
+            hero.changeStateTo(new RunningState());
         }
+     //   System.out.println("update on standing Hero");
     }
 
     @Override
@@ -52,8 +59,10 @@ public class StandingState implements IHeroState {
             Hero.Direction momentum = hero.getDirection();
             if (momentum == Hero.Direction.RIGHT) {
                 img = ImageIO.read(new File("right.png"));
+                hero.setDirection(Hero.Direction.RIGHT);
             } else if (momentum == Hero.Direction.LEFT) {
                 img = ImageIO.read(new File("left.png"));
+                hero.setDirection(Hero.Direction.LEFT);
             }
         } catch (IOException e) {
             System.out.println("ERROR IN READING PICTURE");

@@ -39,21 +39,23 @@ public class FallingState implements IHeroState {
 
     @Override
     public void handleInput(Hero hero, Input.data in) {
-      try {
-        if (in == Input.data.PRESS_UP) {
-          //  hero.changeStateTo(new StandingState());
-        }  else if ( in == Input.data.PRESS_LEFT) {
-            img = ImageIO.read(new File("left.png"));
-            xFallingVelocity = -hero.getRunnigSpeed();
-            hero.setDirection(Hero.Direction.LEFT);
-        } else if ( in == Input.data.PRESS_RIGHT) {
-            img = ImageIO.read(new File("right.png"));
-            xFallingVelocity = hero.getRunnigSpeed();
-            hero.setDirection(Hero.Direction.RIGHT);
+        try {
+            if (in == Input.data.PRESS_UP) {
+                //  hero.changeStateTo(new StandingState());
+            }  else if ( in == Input.data.PRESS_LEFT) {
+                img = ImageIO.read(new File("left.png"));
+                hero.setRunning(in);
+                xFallingVelocity = -hero.getRunnigSpeed();
+                hero.setDirection(Hero.Direction.LEFT);
+            } else if ( in == Input.data.PRESS_RIGHT) {
+                img = ImageIO.read(new File("right.png"));
+                hero.setRunning(in);
+                xFallingVelocity = hero.getRunnigSpeed();
+                hero.setDirection(Hero.Direction.RIGHT);
+            }
+        } catch (IOException e) {
+            System.out.println("ERROR IN READING PICTURE");
         }
-      } catch (IOException e) {
-          System.out.println("ERROR IN READING PICTURE");
-      }
     }
 
     @Override
@@ -61,7 +63,11 @@ public class FallingState implements IHeroState {
         if (hero.onGround()) {
             yFallingVelocity = 0;
             System.out.println("Falling is reset!!");
-            hero.changeStateTo(new StandingState(hero.getDirection()));
+            if (hero.isRunning()) {
+                hero.changeStateTo(new RunningState());
+            } else {
+                hero.changeStateTo(new StandingState(hero.getDirection()));
+            }
         } else {
             updateFallingVelocity();
             hero.addyPos(velocityToInt(hero));
@@ -84,7 +90,7 @@ public class FallingState implements IHeroState {
 
     private int velocityToInt(Hero hero) {
         int temp = (int) yFallingVelocity;
-     //    System.out.println("Falling: " + yFallingVelocity + " Y pos: " + hero.getyPos());
+        //    System.out.println("Falling: " + yFallingVelocity + " Y pos: " + hero.getyPos());
         return temp;
     }
 

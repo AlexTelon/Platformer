@@ -50,9 +50,11 @@ public class JumpingState implements IHeroState {
             // pressing down should end the jump
             hero.changeStateTo(new FallingState(yJumpingVelocity, xJumpingVelocity));
         } else if ( in == Input.data.PRESS_LEFT) {
+            hero.setRunning(in);
             xJumpingVelocity = -hero.getRunnigSpeed();
             hero.setDirection(Hero.Direction.LEFT);
         } else if ( in == Input.data.PRESS_RIGHT) {
+            hero.setRunning(in);
             xJumpingVelocity = hero.getRunnigSpeed();
             hero.setDirection(Hero.Direction.RIGHT);
         }
