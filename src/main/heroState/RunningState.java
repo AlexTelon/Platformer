@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class RunningState implements IHeroState {
     private BufferedImage img = null;
-    private int runnigVelocity = 0; // speed WITH direction
+    private int runningVelocity = 0; // speed WITH direction
 
 
     @Override
@@ -22,24 +22,24 @@ public class RunningState implements IHeroState {
             if (in == Input.data.PRESS_DOWN) {
                 hero.changeStateTo(new DuckingState());
             } else if (in == Input.data.PRESS_UP) {
-                hero.changeStateTo(new JumpingState(runnigVelocity, 0));
+                hero.changeStateTo(new JumpingState(runningVelocity, 0));
             } else if ( in == Input.data.PRESS_LEFT) {
-                img = ImageIO.read(new File("left.png"));
-                hero.setRunning(in);
-                runnigVelocity = -hero.getRunnigSpeed();
-                hero.setDirection(Hero.Direction.LEFT);
+                if (!hero.isRunning()) {
+                    img = ImageIO.read(new File("left.png"));
+                    hero.setRunning(in);
+                    runningVelocity = -hero.getRunnigSpeed();
+                    hero.setDirection(Hero.Direction.LEFT);
+                }
             } else if ( in == Input.data.PRESS_RIGHT) {
-                img = ImageIO.read(new File("right.png"));
-                hero.setRunning(in);
-                runnigVelocity = hero.getRunnigSpeed();
-                hero.setDirection(Hero.Direction.RIGHT);
-                //  } else if (in == Input.data.RELEASE_LEFT ||
-                //      in == Input.data.RELEASE_RIGHT) {
-                //   runnigVelocity = 0;
-                //    hero.changeStateTo(new StandingState(hero.getDirection()));
+                if (!hero.isRunning()) {
+                    img = ImageIO.read(new File("right.png"));
+                    hero.setRunning(in);
+                    runningVelocity = hero.getRunnigSpeed();
+                    hero.setDirection(Hero.Direction.RIGHT);
+                }
             } else if ( in == Input.data.NO_INPUT) {
                 if (!hero.isRunning()) {
-                    runnigVelocity = 0;
+                    runningVelocity = 0;
                     hero.changeStateTo(new StandingState(hero.getDirection()));
                 }
             }
@@ -54,10 +54,10 @@ public class RunningState implements IHeroState {
         if (!hero.onGround()) {
             hero.changeStateTo(new FallingState());
         } else if (hero.isRunning()) {
-            runnigVelocity = hero.getRunnigSpeed();
+            runningVelocity = hero.getRunnigSpeed();
             if (hero.getDirection() == Hero.Direction.LEFT)
-                runnigVelocity = -runnigVelocity;
-            hero.addxPos(runnigVelocity);
+                runningVelocity = -runningVelocity;
+            hero.addxPos(runningVelocity);
         } else {
             hero.changeStateTo(new StandingState(hero.getDirection()));
         }

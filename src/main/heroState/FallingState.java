@@ -43,15 +43,19 @@ public class FallingState implements IHeroState {
             if (in == Input.data.PRESS_UP) {
                 //  hero.changeStateTo(new StandingState());
             }  else if ( in == Input.data.PRESS_LEFT) {
-                img = ImageIO.read(new File("left.png"));
-                hero.setRunning(in);
-                xFallingVelocity = -hero.getRunnigSpeed();
-                hero.setDirection(Hero.Direction.LEFT);
+                if (!hero.isRunning()) {
+                    img = ImageIO.read(new File("left.png"));
+                    hero.setRunning(in);
+                    xFallingVelocity = -hero.getRunnigSpeed();
+                    hero.setDirection(Hero.Direction.LEFT);
+                }
             } else if ( in == Input.data.PRESS_RIGHT) {
-                img = ImageIO.read(new File("right.png"));
-                hero.setRunning(in);
-                xFallingVelocity = hero.getRunnigSpeed();
-                hero.setDirection(Hero.Direction.RIGHT);
+                if (!hero.isRunning()) {
+                    img = ImageIO.read(new File("right.png"));
+                    hero.setRunning(in);
+                    xFallingVelocity = hero.getRunnigSpeed();
+                    hero.setDirection(Hero.Direction.RIGHT);
+                }
             }
         } catch (IOException e) {
             System.out.println("ERROR IN READING PICTURE");

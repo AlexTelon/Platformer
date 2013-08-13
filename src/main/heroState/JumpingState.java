@@ -50,13 +50,17 @@ public class JumpingState implements IHeroState {
             // pressing down should end the jump
             hero.changeStateTo(new FallingState(yJumpingVelocity, xJumpingVelocity));
         } else if ( in == Input.data.PRESS_LEFT) {
-            hero.setRunning(in);
-            xJumpingVelocity = -hero.getRunnigSpeed();
-            hero.setDirection(Hero.Direction.LEFT);
+            if (!hero.isRunning()) {
+                hero.setRunning(in);
+                xJumpingVelocity = -hero.getRunnigSpeed();
+                hero.setDirection(Hero.Direction.LEFT);
+            }
         } else if ( in == Input.data.PRESS_RIGHT) {
-            hero.setRunning(in);
-            xJumpingVelocity = hero.getRunnigSpeed();
-            hero.setDirection(Hero.Direction.RIGHT);
+            if (!hero.isRunning()) {
+                hero.setRunning(in);
+                xJumpingVelocity = hero.getRunnigSpeed();
+                hero.setDirection(Hero.Direction.RIGHT);
+            }
         }
     }
 
@@ -74,13 +78,11 @@ public class JumpingState implements IHeroState {
             hero.addyPos(velocityToInt(hero));
             hero.addxPos(xJumpingVelocity);
         }
-    } 
+    }
 
     @Override
     public void enter(Hero hero, IHeroState state) {
         // fix so jumping is like a reverse falling so it looks neat.
-        // make sure we are in jumpingState while moving upwards and
-        // in falling stat when we move down.
         hero.addyPos(-1);
         handleInput(hero, hero.inputStackPeek());
     }
@@ -89,24 +91,24 @@ public class JumpingState implements IHeroState {
     public BufferedImage getImg() {
         return img;
     }
-    
-    
+
+
     /**
      * jumping could be implemented by making it a fallin state asap so that it handles the slowing down of
      * the upwards movement but since we want the hero to (sometimes) jump through things on the way 
      * up (= jumpingState) while landing on the way down (=fallingState)
      * This jumping state also gives us the option to make the hero able to maybe do an airjump
      * on the way up but not the way down or something like that. 
-     * 
+     *
      */
     private void updateJumpingVelocity() {
         Globals Globals;
         yJumpingVelocity += (9.81* main.Globals.getTimeIntervalMS()/ main.Globals.pixelsPerMeter());
     }
-    
-        private int velocityToInt(Hero hero) {
+
+    private int velocityToInt(Hero hero) {
         int temp = (int) yJumpingVelocity;
-    //     System.out.println("Jumping: " + yJumpingVelocity + " Y pos: " + hero.getyPos());
+        //     System.out.println("Jumping: " + yJumpingVelocity + " Y pos: " + hero.getyPos());
         return temp;
     }
 
