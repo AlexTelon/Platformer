@@ -65,7 +65,23 @@ public class Hero {
     }
 
     public void addxPos(int x) {
-        this.xPos += x;
+        int xNew = xPos + x;
+        if (x > 0) {
+            // we move to the right we need only to check right side
+            if (isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(this.yPos)][pixelPosToBoxPos(xNew+Box.getSide())])) { // ||
+              //      isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(this.yPos+Box.getSide())][pixelPosToBoxPos(xNew+Box.getSide())])) {
+                // we have collided
+                xNew = pixelPosToBoxPos(xNew)*Box.getSide();
+            }
+        } else if (x < 0) {
+            // we need only to check left side
+            if (isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(this.yPos)][pixelPosToBoxPos(xNew)])) {// ||
+              //      isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(this.yPos+Box.getSide())][pixelPosToBoxPos(xNew)])) {
+                // we have collided
+                xNew = (pixelPosToBoxPos(xNew)+1)*Box.getSide();
+            }
+        }
+        this.xPos = xNew;
     }
 
     public int getyPos() {
@@ -92,14 +108,10 @@ public class Hero {
                 if (yNewFeet < i*Box.getSide()) {
                     // feet of hero will be over a box. -> OK
                     this.yPos = yPos + y;
-                    System.out.println("Ynew: " + yNewFeet);
-                    System.out.println("box position in Y: " + i);
-                  //  System.out.println("inside?");
                 } else {
                     // else we would end up inside/below a box
                     // so we put it on the box
                     this.yPos = (i-1)*Box.getSide();
-                 //   System.out.println("outside");
                 }
                 return;
             }
