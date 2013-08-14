@@ -66,18 +66,25 @@ public class Hero {
 
     public void addxPos(int x) {
         int xNew = xPos + x;
+
+        // This makes the hero be able to go above the screen
+        if (this.yPos <= 0) {
+            this.xPos = xNew;
+            return;
+        }
+
         if (x > 0) {
-            // we move to the right we need only to check right side
-            if (isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(this.yPos)][pixelPosToBoxPos(xNew+Box.getSide())])) { // ||
-              //      isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(this.yPos+Box.getSide())][pixelPosToBoxPos(xNew+Box.getSide())])) {
-                // we have collided
+            if (isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(this.yPos)][pixelPosToBoxPos(xNew+Box.getSide())])) {
+                xNew = pixelPosToBoxPos(xNew)*Box.getSide(); // we have collided
+            } else if (!this.onGround() &&   // if we are on ground, dont check for horizontal collisions at the hero's feet
+                    isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(this.yPos+Box.getSide())][pixelPosToBoxPos(xNew+Box.getSide())])) {
                 xNew = pixelPosToBoxPos(xNew)*Box.getSide();
             }
         } else if (x < 0) {
-            // we need only to check left side
-            if (isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(this.yPos)][pixelPosToBoxPos(xNew)])) {// ||
-              //      isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(this.yPos+Box.getSide())][pixelPosToBoxPos(xNew)])) {
-                // we have collided
+            if (isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(this.yPos)][pixelPosToBoxPos(xNew)])) {
+                xNew = (pixelPosToBoxPos(xNew)+1)*Box.getSide();
+            }else if (!this.onGround() &&
+                    isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(this.yPos+Box.getSide())][pixelPosToBoxPos(xNew)])) {
                 xNew = (pixelPosToBoxPos(xNew)+1)*Box.getSide();
             }
         }
@@ -104,7 +111,7 @@ public class Hero {
 
         for (int i = yOldBoxPosFeet; i < Globals.getHeightInBoxes(); i++) {
             if (isSolid(this.getMap().getBoxMap()[i][xBoxPosLeft]) ||
-                isSolid(this.getMap().getBoxMap()[i][xBoxPosRight]) ) {
+                    isSolid(this.getMap().getBoxMap()[i][xBoxPosRight]) ) {
                 if (yNewFeet < i*Box.getSide()) {
                     // feet of hero will be over a box. -> OK
                     this.yPos = yPos + y;
@@ -140,7 +147,7 @@ public class Hero {
 
     //TODO change the way we handle input?
     public void inputStackPush(Input.data input) {
-    //    System.out.println("Input push " + input.toString());
+        //    System.out.println("Input push " + input.toString());
         //  InputStack.clear();
         this.setNewInput(true);
         InputStack.push(input);
@@ -150,11 +157,11 @@ public class Hero {
 
         if (newInput) {
             this.setNewInput(false);
-       //     System.out.println("input peek " + InputStack.peek().toString());
+            //     System.out.println("input peek " + InputStack.peek().toString());
             return (Input.data) InputStack.peek();
         }
         this.setNewInput(false);
-    //    System.out.println("input peek " + Input.data.NO_INPUT.toString());
+        //    System.out.println("input peek " + Input.data.NO_INPUT.toString());
         InputStack.push(Input.data.NO_INPUT);
         return Input.data.NO_INPUT;
     }
@@ -278,7 +285,7 @@ public class Hero {
         if (xVelocity > 0) {
             setDirection(Direction.RIGHT);
         } else if (xVelocity < 0) {
-           this.direction = Direction.LEFT;
+            this.direction = Direction.LEFT;
         }
         System.out.println(xVelocity);
         this.xVelocity = xVelocity;
