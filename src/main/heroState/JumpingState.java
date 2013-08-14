@@ -14,8 +14,6 @@ import java.io.IOException;
  */
 public class JumpingState implements IHeroState {
     private BufferedImage img = null;
-    private double yJumpingVelocity = -40;
-    private int xJumpingVelocity = 0;
     private int nrOfJumpsInAir = 0;
     private int maxNrOfJumpsInAir = 2;
 
@@ -29,13 +27,12 @@ public class JumpingState implements IHeroState {
         }
     }
 
-    public JumpingState(int runnigVelocity, int nrOfJumpsInAir) {
+    public JumpingState(int nrOfJumpsInAir) {
         try {
             img = ImageIO.read(new File("up.png"));
         } catch (IOException e) {
             System.out.println("ERROR IN READING PICTURE");
         }
-        xJumpingVelocity = runnigVelocity;
         this.nrOfJumpsInAir = nrOfJumpsInAir;
     }
 
@@ -44,45 +41,43 @@ public class JumpingState implements IHeroState {
         if (in == Input.data.PRESS_UP) {
             if ( nrOfJumpsInAir < maxNrOfJumpsInAir) {
                 nrOfJumpsInAir++;
-                hero.changeStateTo(new JumpingState(xJumpingVelocity, nrOfJumpsInAir));
+                hero.changeStateTo(new JumpingState(nrOfJumpsInAir));
             }
         } else if( in == Input.data.PRESS_DOWN) {
             // pressing down should end the jump
-            hero.changeStateTo(new FallingState(yJumpingVelocity, xJumpingVelocity));
+            hero.changeStateTo(new FallingState());
         } else if ( in == Input.data.PRESS_LEFT) {
             if (!hero.isRunning()) {
                 hero.setRunning(in);
-                xJumpingVelocity = -hero.getRunnigSpeed();
-                hero.setDirection(Hero.Direction.LEFT);
+                hero.setxVelocity(-hero.getRunnigSpeed());
             }
         } else if ( in == Input.data.PRESS_RIGHT) {
             if (!hero.isRunning()) {
                 hero.setRunning(in);
-                xJumpingVelocity = hero.getRunnigSpeed();
-                hero.setDirection(Hero.Direction.RIGHT);
+                hero.setxVelocity(hero.getRunnigSpeed());
             }
         }
     }
 
     @Override
     public void update(Hero hero) {
-        if (hero.onGround()) {
-            yJumpingVelocity = 0;
-            hero.changeStateTo(new StandingState(hero.getDirection()));
-        } else if (yJumpingVelocity > 0) {
+        if (hero.getyVelocity() > 0) {
             // we are now going downwards
-            hero.changeStateTo(new FallingState(yJumpingVelocity, xJumpingVelocity));
-            yJumpingVelocity = 0;
+            hero.setyVelocity(0);
+            hero.changeStateTo(new FallingState());
         } else {
-            updateJumpingVelocity();
-            hero.addyPos(velocityToInt(hero));
-            hero.addxPos(xJumpingVelocity);
+            hero.addyVelocity(9.81* main.Globals.getTimeIntervalMS()/ main.Globals.pixelsPerMeter());
+            hero.addyPos(hero.getyVelocity());
+            if (hero.isRunning()) {
+                hero.addxPos(hero.getxVelocity());
+            }
         }
     }
 
     @Override
     public void enter(Hero hero, IHeroState state) {
         // fix so jumping is like a reverse falling so it looks neat.
+        hero.setyVelocity(-40);
         hero.addyPos(-1);
         handleInput(hero, hero.inputStackPeek());
     }
@@ -91,25 +86,4 @@ public class JumpingState implements IHeroState {
     public BufferedImage getImg() {
         return img;
     }
-
-
-    /**
-     * jumping could be implemented by making it a fallin state asap so that it handles the slowing down of
-     * the upwards movement but since we want the hero to (sometimes) jump through things on the way 
-     * up (= jumpingState) while landing on the way down (=fallingState)
-     * This jumping state also gives us the option to make the hero able to maybe do an airjump
-     * on the way up but not the way down or something like that. 
-     *
-     */
-    private void updateJumpingVelocity() {
-        Globals Globals;
-        yJumpingVelocity += (9.81* main.Globals.getTimeIntervalMS()/ main.Globals.pixelsPerMeter());
-    }
-
-    private int velocityToInt(Hero hero) {
-        int temp = (int) yJumpingVelocity;
-        //     System.out.println("Jumping: " + yJumpingVelocity + " Y pos: " + hero.getyPos());
-        return temp;
-    }
-
 }

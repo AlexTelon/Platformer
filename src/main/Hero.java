@@ -19,17 +19,18 @@ public class Hero {
     private int width = 30;
     private int runnigSpeed = 10; // the quantitive speed
     private int mapProgression = 0; // which is the leftmost position on the screen
+    private int xVelocity = 0;
+    private double yVelocity = 0;
     private boolean isAlive = true;
     private boolean newInput = false;
     private BoxMap map = new BoxMap();
     private boolean isRunning = false;
     private Input.data runningReleasedOn; // determines how isRunning is set to false
+    private Direction direction = Direction.RIGHT;
 
     public static enum Direction {
         LEFT, RIGHT;
-
     }
-    private Direction direction = Direction.RIGHT;
 
     public Hero() {
         // TODO
@@ -75,7 +76,8 @@ public class Hero {
         int yNew= yPos + y;
         int yOldFeet = this.yPos + Box.getSide();
         int yNewFeet = yNew + Box.getSide();
-        int xBoxPos = pixelPosToBoxPos(xPos);
+        int xBoxPosLeft = pixelPosToBoxPos(xPos);
+        int xBoxPosRight = pixelPosToBoxPos(xPos+Box.getSide());
         int yOldBoxPosFeet = pixelPosToBoxPos(yOldFeet);
 
         // This makes the hero be able to go above the screen
@@ -85,14 +87,19 @@ public class Hero {
         }
 
         for (int i = yOldBoxPosFeet; i < Globals.getHeightInBoxes(); i++) {
-            if (isSolid(this.getMap().getBoxMap()[i][xBoxPos])) {
+            if (isSolid(this.getMap().getBoxMap()[i][xBoxPosLeft]) ||
+                isSolid(this.getMap().getBoxMap()[i][xBoxPosRight]) ) {
                 if (yNewFeet < i*Box.getSide()) {
                     // feet of hero will be over a box. -> OK
                     this.yPos = yPos + y;
+                    System.out.println("Ynew: " + yNewFeet);
+                    System.out.println("box position in Y: " + i);
+                  //  System.out.println("inside?");
                 } else {
                     // else we would end up inside/below a box
                     // so we put it on the box
                     this.yPos = (i-1)*Box.getSide();
+                 //   System.out.println("outside");
                 }
                 return;
             }
@@ -121,7 +128,7 @@ public class Hero {
 
     //TODO change the way we handle input?
     public void inputStackPush(Input.data input) {
-        System.out.println("Input push " + input.toString());
+    //    System.out.println("Input push " + input.toString());
         //  InputStack.clear();
         this.setNewInput(true);
         InputStack.push(input);
@@ -131,11 +138,11 @@ public class Hero {
 
         if (newInput) {
             this.setNewInput(false);
-            System.out.println("input peek " + InputStack.peek().toString());
+       //     System.out.println("input peek " + InputStack.peek().toString());
             return (Input.data) InputStack.peek();
         }
         this.setNewInput(false);
-        System.out.println("input peek " + Input.data.NO_INPUT.toString());
+    //    System.out.println("input peek " + Input.data.NO_INPUT.toString());
         InputStack.push(Input.data.NO_INPUT);
         return Input.data.NO_INPUT;
     }
@@ -176,6 +183,8 @@ public class Hero {
                 isSolid(this.getMap().getBoxMap()[pixelPosToBoxPos(yHeroFeetPos)][pixelPosToBoxPos(xHeroFeetPosRight)])) {
             return true;
         }
+        System.out.println(pixelPosToBoxPos(xHeroFeetPosLeft) + " " + pixelPosToBoxPos(xHeroFeetPosRight));
+        System.out.println(pixelPosToBoxPos(yHeroFeetPos));
         return false;
     }
 
@@ -238,5 +247,40 @@ public class Hero {
 
     public boolean isRunning() {
         return isRunning;
+    }
+
+    public int getxVelocity() {
+        return xVelocity;
+    }
+
+    public void addxVelocity(int xVelocity) {
+        if (xVelocity > 0) {
+            setDirection(Direction.RIGHT);
+        } else if (xVelocity < 0) {
+            setDirection(Direction.LEFT);
+        }
+        this.xVelocity += xVelocity;
+    }
+
+    public void setxVelocity(int xVelocity) {
+        if (xVelocity > 0) {
+            setDirection(Direction.RIGHT);
+        } else if (xVelocity < 0) {
+           this.direction = Direction.LEFT;
+        }
+        System.out.println(xVelocity);
+        this.xVelocity = xVelocity;
+    }
+
+    public int getyVelocity() {
+        return (int) yVelocity;
+    }
+
+    public void addyVelocity(double yVelocity) {
+        this.yVelocity += yVelocity;
+    }
+
+    public void setyVelocity(double yVelocity) {
+        this.yVelocity = yVelocity;
     }
 }

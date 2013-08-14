@@ -54,7 +54,13 @@ public class GraphicalViewer extends JComponent {
         // Debug info
         g2.setColor(Color.black);
         g2.drawString(hero.getState().toString(), 100, 25);
-
+       if (hero.isRunning()) {
+           g2.drawString("RUNNING", 500, 25);
+       } else {
+           g2.drawString("NOT RUNNING", 500, 25);
+       }
+        g2.drawString(hero.getDirection().toString(), 100, 50);
+        g2.drawString("" + hero.getRunnigSpeed(), 100, 75);
 
     }
 
