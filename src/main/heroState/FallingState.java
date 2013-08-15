@@ -15,6 +15,8 @@ import java.io.IOException;
 public class FallingState implements IHeroState {
     private BufferedImage img = null;
     // private int fallingTime = 0;
+    private int nrOfJumpsInAir = 0;
+    private int maxNrOfJumpsInAir = 2;
 
     public FallingState() {
         try {
@@ -24,11 +26,23 @@ public class FallingState implements IHeroState {
         }
     }
 
+    public FallingState(int nrOfJumpsInAir) {
+        try {
+            img = ImageIO.read(new File("falling.png"));
+        } catch (IOException e) {
+            System.out.println("ERROR IN READING PICTURE");
+        }
+        this.nrOfJumpsInAir = nrOfJumpsInAir;
+    }
+
     @Override
     public void handleInput(Hero hero, Input.data in) {
         try {
             if (in == Input.data.PRESS_UP) {
-                //  hero.changeStateTo(new StandingState());
+                if ( nrOfJumpsInAir < maxNrOfJumpsInAir) {
+                    nrOfJumpsInAir++;
+                  hero.changeStateTo(new JumpingState(nrOfJumpsInAir));
+                }
             }  else if ( in == Input.data.PRESS_LEFT) {
                 if (!hero.isRunning()) {
                     img = ImageIO.read(new File("left.png"));

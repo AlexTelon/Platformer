@@ -6,9 +6,11 @@ package main;
 public class Globals {
     private static int HeightInBoxes = 15;
     private static int  WidthInBoxes = 35;
+    private static int  xMiddleOfBoxes = WidthInBoxes / 2;
     private static int refreshrate = 50;
     private static int timeInterval = 1000/refreshrate;
     private static int pixelsPerMeter = 30;
+
 
     public static int getHeightInBoxes() {
         return HeightInBoxes;
@@ -32,5 +34,9 @@ public class Globals {
 
     public static int pixelsPerMeter() {
         return pixelsPerMeter;
+    }
+
+    public static int getxMiddleOfBoxes() {
+        return xMiddleOfBoxes;
     }
 }

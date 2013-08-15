@@ -89,6 +89,8 @@ public class Hero {
             }
         }
         this.xPos = xNew;
+
+
     }
 
     public int getyPos() {
@@ -302,4 +304,6 @@ public class Hero {
     public void setyVelocity(double yVelocity) {
         this.yVelocity = yVelocity;
     }
+
+
 }

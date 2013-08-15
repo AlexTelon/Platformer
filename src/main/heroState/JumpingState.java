@@ -64,7 +64,7 @@ public class JumpingState implements IHeroState {
         if (hero.getyVelocity() > 0) {
             // we are now going downwards
             hero.setyVelocity(0);
-            hero.changeStateTo(new FallingState());
+            hero.changeStateTo(new FallingState(nrOfJumpsInAir));
         } else {
             hero.addyVelocity(9.81* main.Globals.getTimeIntervalMS()/ main.Globals.pixelsPerMeter());
             hero.addyPos(hero.getyVelocity());
