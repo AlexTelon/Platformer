@@ -1,4 +1,5 @@
 package main;
+import main.graphics.Camera;
 import main.heroState.*;
 import main.map.Box;
 import main.map.BoxMap;
@@ -13,7 +14,7 @@ public class Hero {
     private IHeroState state = new StandingState(this.getDirection());
     private Stack StateStack = new Stack();
     private Stack InputStack = new Stack();
-    private int xPos = 150; // start pos in pixels
+    private int xPos = 0; // start pos in pixels
     private int yPos = 150; // start pos in pixels
     private int height = 30;
     private int width = 30;
@@ -27,7 +28,7 @@ public class Hero {
     private boolean isRunning = false;
     private Input.data runningReleasedOn; // determines how isRunning is set to false
     private Direction direction = Direction.RIGHT;
-
+    private Camera camera;
     public static enum Direction {
         LEFT, RIGHT;
     }
@@ -37,6 +38,7 @@ public class Hero {
         // this is only to "fix" a bug
         InputStack.push(Input.data.PRESS_RIGHT);
         MapCreator.createMap(this);
+        camera = new Camera(this);
     }
 
     public void handleInput(Input.data input) {
@@ -70,6 +72,12 @@ public class Hero {
         // This makes the hero be able to go above the screen
         if (this.yPos <= 0) {
             this.xPos = xNew;
+            Camera.update(xNew);
+            return;
+        }
+
+        if (xNew <= 0) {
+            this.xPos = 0;
             return;
         }
 
@@ -89,8 +97,7 @@ public class Hero {
             }
         }
         this.xPos = xNew;
-
-
+        Camera.update(xNew);
     }
 
     public int getyPos() {
@@ -111,7 +118,7 @@ public class Hero {
             return;
         }
 
-        for (int i = yOldBoxPosFeet; i < Globals.getHeightInBoxes(); i++) {
+        for (int i = yOldBoxPosFeet; i < Globals.getScreenHeightInBoxes(); i++) {
             if (isSolid(this.getMap().getBoxMap()[i][xBoxPosLeft]) ||
                     isSolid(this.getMap().getBoxMap()[i][xBoxPosRight]) ) {
                 if (yNewFeet < i*Box.getSide()) {
@@ -226,7 +233,7 @@ public class Hero {
      * @param pixelPos in pixels
      * @return pos in "boxes"
      */
-    private int pixelPosToBoxPos(int pixelPos) {
+    public int pixelPosToBoxPos(int pixelPos) {
         return pixelPos / Box.getSide();
     }
 
@@ -305,5 +312,8 @@ public class Hero {
         this.yVelocity = yVelocity;
     }
 
+    public int getxStartingPosition() {
+        return xPos;
+    }
 
 }

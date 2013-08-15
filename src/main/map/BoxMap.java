@@ -2,15 +2,14 @@ package main.map;
 
 import main.Globals;
 
-import java.awt.image.BufferedImage;
-
 /**
  * @author Alex Telon
  * The building blocks that the world is made of.
  */
 public class BoxMap {
-
-    private Box[][] boxMap = new Box[Globals.getHeightInBoxes()][Globals.getWidthInBoxes()];
+    private int mapHeight = Globals.getScreenHeightInBoxes();
+    private int mapWidth = 100;
+    private Box[][] boxMap = new Box[Globals.getScreenHeightInBoxes()][mapWidth];
 
     /**
      * tries to add a Box to a boxMap
@@ -31,4 +30,11 @@ public class BoxMap {
         return boxMap;
     }
 
+    public int getMapHeight() {
+        return mapHeight;
+    }
+
+    public int getMapWidth() {
+        return mapWidth;
+    }
 }

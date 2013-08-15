@@ -17,8 +17,8 @@ import main.map.Box;
 public class GraphicalViewer extends JComponent {
     private Hero hero;
 
-    private int height = Globals.getHeightInBoxes() * Box.getSide();
-    private int width = Globals.getWidthInBoxes() * Box.getSide();
+    private int height = Globals.getScreenHeightInBoxes() * Box.getSide();
+    private int width = Globals.getScreenWidthInBoxes() * Box.getSide();
     BufferedImage img = null;
 
     public GraphicalViewer() {
@@ -48,7 +48,6 @@ public class GraphicalViewer extends JComponent {
         Graphics2D g2 = (Graphics2D) g;
 
         paintHero(g2);
-        paintBackground(g2);
         paintBoxes(g2);
 
         // Debug info
@@ -60,39 +59,52 @@ public class GraphicalViewer extends JComponent {
            g2.drawString("NOT RUNNING", 500, 25);
        }
         g2.drawString(hero.getDirection().toString(), 100, 50);
-        g2.drawString("" + hero.getRunnigSpeed(), 100, 75);
+        g2.drawString("pix offset " + Camera.getPixOffset(), 100, 75);
+        g2.drawString("Left side " + Camera.getLeftSide(), 100, 100);
+        g2.drawString("Right side " + Camera.getRightSide(), 100, 125);
+        g2.drawString("Box offset " + Camera.getBoxOffset(), 100, 150);
+
+
 
     }
 
     private void paintBoxes(Graphics2D g2) {
+        int leftSide = Camera.getLeftSide();
+        int rightSide = Camera.getRightSide();
+        int leftBoxSide = hero.pixelPosToBoxPos(leftSide);
+        int rightBoxSide = hero.pixelPosToBoxPos(rightSide);
+
+        Box box;
+        for (int x = leftBoxSide; x < rightBoxSide; x++) {
+            for (int y = 0; y < hero.getMap().getMapHeight(); y++) {
+                box = hero.getMap().getBoxMap()[y][x];
+                if (box != null) {
+                    g2.drawImage(box.getImg(),null,(x-Camera.getBoxOffset())*Box.getSide(), y*Box.getSide());
+                    g2.drawString("" + x,(x-Camera.getBoxOffset())*Box.getSide()+6, y*Box.getSide()+20);
+                }
+            }
+        }
+    }
+
+/*
+    private void paintBoxes(Graphics2D g2) {
         int leftSide = hero.getMapProgression();
-        int rightSide = leftSide + Globals.getWidthInBoxes();
+        int rightSide = leftSide + Globals.getScreenWidthInBoxes();
         Box box;
         for (int x = leftSide; x < rightSide; x++) {
-            for (int y = 0; y < Globals.getHeightInBoxes(); y++) {
+            for (int y = 0; y < Globals.getScreenHeightInBoxes(); y++) {
                 box = hero.getMap().getBoxMap()[y][x];
                 if (box != null) {
                     g2.drawImage(box.getImg(),null,x*Box.getSide(), y*Box.getSide());
                 }
             }
         }
-    }
-
-    private void paintBackground(Graphics2D g2) {
-       // g2.setColor(SystemColor.green);
-    //    g2.fillRect(0, 280, 500, 120);
-    }
-
-
+    }*/
 
     private void paintHero(Graphics2D g2) {
-
-        // Drawing the rotated image at the required drawing locations
-        //     g2.drawImage(hero.getOp().filter(img, null), hero.getxPos(), hero.getyPos(), null);
         img = hero.getState().getImg();
         g2.drawImage(img, hero.getxPos(), hero.getyPos(), null);
     }
-
 
     public void setHero(Hero hero) {
         this.hero = hero;

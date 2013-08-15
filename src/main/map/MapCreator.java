@@ -1,6 +1,5 @@
 package main.map;
 
-import main.Globals;
 import main.Hero;
 
 import java.util.Random;
@@ -17,19 +16,19 @@ public class MapCreator {
         int i = 0;
         createFloor(hero);
         do {
-            temp = hero.getMap().addBox(new Box(), rand.nextInt(Globals.getWidthInBoxes()), rand.nextInt(Globals.getHeightInBoxes()));
+            temp = hero.getMap().addBox(new Box(), rand.nextInt(hero.getMap().getMapWidth()), rand.nextInt(hero.getMap().getMapHeight()));
             if (temp) {
                 i++;
             }
-        } while (i < 30);
+        } while (i < 25);
     }
 
     /**
      * Creates a floor.
      */
     private static void createFloor(Hero hero) {
-        for (int x = 0; x < Globals.getWidthInBoxes(); x++) {
-            hero.getMap().addBox(new Box(), x, Globals.getHeightInBoxes()-1);
+        for (int x = 0; x < hero.getMap().getMapWidth(); x++) {
+            hero.getMap().addBox(new Box(), x, hero.getMap().getMapHeight()-1);
         }
     }
 

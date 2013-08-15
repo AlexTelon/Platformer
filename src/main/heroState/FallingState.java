@@ -35,13 +35,14 @@ public class FallingState implements IHeroState {
         this.nrOfJumpsInAir = nrOfJumpsInAir;
     }
 
+
     @Override
     public void handleInput(Hero hero, Input.data in) {
         try {
             if (in == Input.data.PRESS_UP) {
                 if ( nrOfJumpsInAir < maxNrOfJumpsInAir) {
                     nrOfJumpsInAir++;
-                  hero.changeStateTo(new JumpingState(nrOfJumpsInAir));
+                    hero.changeStateTo(new JumpingState(nrOfJumpsInAir));
                 }
             }  else if ( in == Input.data.PRESS_LEFT) {
                 if (!hero.isRunning()) {
@@ -74,9 +75,9 @@ public class FallingState implements IHeroState {
         } else {
             hero.addyVelocity(9.81*Globals.getTimeIntervalMS()/Globals.pixelsPerMeter());
             hero.addyPos(hero.getyVelocity());
-            if (hero.isRunning()) {
+        //    if (hero.isRunning()) {
                 hero.addxPos(hero.getxVelocity());
-            }
+         //   }
         }
     }
 

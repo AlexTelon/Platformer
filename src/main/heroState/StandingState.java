@@ -55,6 +55,7 @@ public class StandingState implements IHeroState {
     @Override
     public void enter(Hero hero, IHeroState state) {
         try {
+            hero.setxVelocity(0);
             Hero.Direction direction = hero.getDirection();
             if (direction == Hero.Direction.RIGHT) {
                 img = ImageIO.read(new File("right.png"));

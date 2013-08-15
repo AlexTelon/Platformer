@@ -1,6 +1,5 @@
 package main.heroState;
 
-import main.Globals;
 import main.Hero;
 import main.Input;
 
@@ -68,9 +67,9 @@ public class JumpingState implements IHeroState {
         } else {
             hero.addyVelocity(9.81* main.Globals.getTimeIntervalMS()/ main.Globals.pixelsPerMeter());
             hero.addyPos(hero.getyVelocity());
-            if (hero.isRunning()) {
+         //   if (hero.isRunning()) {
                 hero.addxPos(hero.getxVelocity());
-            }
+         //   }
         }
     }
 
