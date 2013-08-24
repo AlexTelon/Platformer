@@ -16,7 +16,6 @@ import main.map.Box;
  */
 public class GraphicalViewer extends JComponent {
     private Hero hero;
-
     private int height = Globals.getScreenHeightInBoxes() * Box.getSide();
     private int width = Globals.getScreenWidthInBoxes() * Box.getSide();
     BufferedImage img = null;
@@ -60,9 +59,10 @@ public class GraphicalViewer extends JComponent {
        }
         g2.drawString(hero.getDirection().toString(), 100, 50);
         g2.drawString("pix offset " + Camera.getPixOffset(), 100, 75);
-        g2.drawString("Left side " + Camera.getLeftSide(), 100, 100);
-        g2.drawString("Right side " + Camera.getRightSide(), 100, 125);
+        g2.drawString("Left side " + Camera.getLeftSide() +  " Left box side: " + hero.pixelPosToBoxPos(Camera.getLeftSide()), 100, 100);
+        g2.drawString("Right side " + Camera.getRightSide() + " Right box side: " + hero.pixelPosToBoxPos(Camera.getRightSide()), 100, 125);
         g2.drawString("Box offset " + Camera.getBoxOffset(), 100, 150);
+        g2.drawString("Hero X pos " + hero.getxPos(), 100, 175);
 
 
 
@@ -80,30 +80,19 @@ public class GraphicalViewer extends JComponent {
                 box = hero.getMap().getBoxMap()[y][x];
                 if (box != null) {
                     g2.drawImage(box.getImg(),null,(x-Camera.getBoxOffset())*Box.getSide(), y*Box.getSide());
-                    g2.drawString("" + x,(x-Camera.getBoxOffset())*Box.getSide()+6, y*Box.getSide()+20);
+                    g2.drawString("" + x, (x-Camera.getBoxOffset())*Box.getSide()+6, y*Box.getSide()+20);
                 }
             }
         }
     }
 
-/*
-    private void paintBoxes(Graphics2D g2) {
-        int leftSide = hero.getMapProgression();
-        int rightSide = leftSide + Globals.getScreenWidthInBoxes();
-        Box box;
-        for (int x = leftSide; x < rightSide; x++) {
-            for (int y = 0; y < Globals.getScreenHeightInBoxes(); y++) {
-                box = hero.getMap().getBoxMap()[y][x];
-                if (box != null) {
-                    g2.drawImage(box.getImg(),null,x*Box.getSide(), y*Box.getSide());
-                }
-            }
-        }
-    }*/
-
     private void paintHero(Graphics2D g2) {
         img = hero.getState().getImg();
-        g2.drawImage(img, hero.getxPos(), hero.getyPos(), null);
+        if (hero.getxPos() > Globals.getHalfScreenWidth()) {
+        g2.drawImage(img, Globals.getHalfScreenWidth(), hero.getyPos(), null);
+        } else {
+            g2.drawImage(img, hero.getxPos(), hero.getyPos(), null);
+        }
     }
 
     public void setHero(Hero hero) {

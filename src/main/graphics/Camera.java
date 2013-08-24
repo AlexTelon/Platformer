@@ -22,20 +22,23 @@ public class Camera {
         this.hero = hero;
         this.xHeroPosition = hero.getxPos();
         xHeroPosition = hero.getxStartingPosition();
-        //boxOffset = pixOffset / Box.getSide();
         setSides();
     }
 
 
     public static void update(int xPos) {
+        // need to fix something like this..
+        if (xPos > halfScreen) {
         pixOffset += (xPos - xHeroPosition);
         if (pixOffset != 0) {
             System.out.println("");
         }
-        System.out.println((xPos - xHeroPosition));
+        xHeroPosition = hero.getxPos();
         boxOffset = pixOffset / Box.getSide();
-        xHeroPosition = xPos;
+        }
         setSides();
+        xHeroPosition = xPos;
+
     }
 
     private static void setSides() {
